@@ -52,7 +52,12 @@ export const signin = async (req, res, next) => {
 
     const { password: pass, ...rest } = validUser._doc
 
-    res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+    res.cookie("access_token", token, { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }).status(200).json({
       success: true,
       message: "Login Successful!",
       rest,
@@ -64,7 +69,11 @@ export const signin = async (req, res, next) => {
 
 export const signout = async (req, res, next) => {
   try {
-    res.clearCookie("access_token")
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    });
 
     res.status(200).json({
       success: true,

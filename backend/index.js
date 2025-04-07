@@ -20,7 +20,16 @@ const app = express()
 // to make input as json
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ origin: ["http://localhost:5173","https://notes-app-frontend-wheat.vercel.app"], credentials: true }))
+app.use(cors({ 
+  origin: ["http://localhost:5173", "https://notes-app-frontend-chi.vercel.app"], 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['set-cookie']
+}))
+
+// Enable pre-flight requests
+app.options('*', cors())
 
 app.get("/", (req, res) => {
   res.json({ message: "Server is running" })
