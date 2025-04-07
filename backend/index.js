@@ -8,22 +8,13 @@ import noteRouter from "./routes/note.route.js"
 
 dotenv.config()
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("Connected to mongoDB")
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-
 const app = express()
 
-// to make input as json
+// Middleware
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({ 
-  origin: ["http://localhost:5173", "https://notes-app-frontend-wheat.vercel.app"], 
+  origin: ["http://localhost:5173", "https://notes-app-frontend-chi.vercel.app"], 
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -42,7 +33,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter)
 app.use("/api/note", noteRouter)
 
-// error handling
+// Error handling
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
   const message = err.message || "Internal Server Error"
@@ -54,8 +45,17 @@ app.use((err, req, res, next) => {
   })
 })
 
-const PORT = process.env.PORT || 3000
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
+// Connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Connected to MongoDB")
+    // Start server only after MongoDB connection
+    const PORT = process.env.PORT || 3000
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`)
+    })
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err)
+  })
