@@ -8,7 +8,7 @@ import {
   signInStart,
   signInSuccess,
 } from "../../redux/user/userSlice"
-import axios from "axios"
+import api from "../../config/api"
 import { toast } from "react-toastify"
 
 const Login = () => {
@@ -39,11 +39,7 @@ const Login = () => {
     try {
       dispatch(signInStart())
 
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/signin",
-        { email, password },
-        { withCredentials: true }
-      )
+      const res = await api.post("/api/auth/signin", { email, password })
 
       if (res.data.success === false) {
         toast.error(res.data.message)
@@ -55,7 +51,6 @@ const Login = () => {
       dispatch(signInSuccess(res.data))
       navigate("/")
     } catch (error) {
-      //toast.error(error.message)
       const errorMessage = error.response?.data?.message || "Something went wrong";
       toast.error(errorMessage);
       dispatch(signInFailure(error.message))

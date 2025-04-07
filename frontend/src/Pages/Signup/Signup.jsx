@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import PasswordInput from "../../components/Input/PasswordInput"
 import { Link, useNavigate } from "react-router-dom"
 import { validateEmail } from "../../utils/helper"
-import axios from "axios"
+import api from "../../config/api"
 import { toast } from "react-toastify"
 
 const Signup = () => {
@@ -35,11 +35,11 @@ const Signup = () => {
 
     // sign up api
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/signup",
-        { username: name, email, password },
-        { withCredentials: true }
-      )
+      const res = await api.post("/api/auth/signup", {
+        username: name,
+        email,
+        password
+      })
 
       if (res.data.success === false) {
         setError(res.data.message)
@@ -48,9 +48,7 @@ const Signup = () => {
       }
 
       toast.success(res.data.message)
-
       setError("")
-
       navigate("/login")
     } catch (error) {
       toast.error(error.message)

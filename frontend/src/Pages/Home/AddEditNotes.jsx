@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { MdClose } from "react-icons/md"
 import TagInput from "../../components/Input/TagInput"
-import axios from "axios"
+import api from "../../config/api"
 import { toast } from "react-toastify"
 
 const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
@@ -13,19 +13,15 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
   //   Edit Note
   const editNote = async () => {
     const noteId = noteData._id
-    console.log(noteId)
 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/note/edit/" + noteId,
-        { title, content, tags },
-        { withCredentials: true }
-      )
-
-      console.log(res.data)
+      const res = await api.post("/api/note/edit/" + noteId, {
+        title,
+        content,
+        tags
+      })
 
       if (res.data.success === false) {
-        console.log(res.data.message)
         setError(res.data.message)
         toast.error(res.data.message)
         return
@@ -36,7 +32,6 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
       onClose()
     } catch (error) {
       toast.error(error.message)
-      console.log(error.message)
       setError(error.message)
     }
   }
@@ -44,17 +39,15 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
   //   Add Note
   const addNewNote = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/note/add",
-        { title, content, tags },
-        { withCredentials: true }
-      )
+      const res = await api.post("/api/note/add", {
+        title,
+        content,
+        tags
+      })
 
       if (res.data.success === false) {
-        console.log(res.data.message)
         setError(res.data.message)
         toast.error(res.data.message)
-
         return
       }
 
@@ -63,7 +56,6 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
       onClose()
     } catch (error) {
       toast.error(error.message)
-      console.log(error.message)
       setError(error.message)
     }
   }
