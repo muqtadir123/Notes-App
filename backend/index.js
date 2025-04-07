@@ -22,6 +22,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(cors({ origin: ["http://localhost:5173","https://notes-app-frontend-wheat.vercel.app"], credentials: true }))
 
+app.get("/", (req, res) => {
+  res.json({ message: "Server is running" })
+})
+
 app.listen(3000, () => {
   console.log("Server is running on port 3000")
 })
